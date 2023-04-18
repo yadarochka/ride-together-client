@@ -1,14 +1,24 @@
-import { useState } from "react";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
-import AdressInput from "./components/Input/Input";
 import LandingPage from "./pages/HomePage/HomePage";
+import RegisterPage from "./pages/RegisterPage/RegisterPage";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <LandingPage />,
+  },
+  {
+    path: "/register",
+    element: <RegisterPage></RegisterPage>,
+  },
+]);
 
 function App() {
-  const [count, setCount] = useState(0);
-  console.log("render");
   return (
     <div className="App">
-      <LandingPage></LandingPage>
+      <RouterProvider router={router} />
     </div>
   );
 }
