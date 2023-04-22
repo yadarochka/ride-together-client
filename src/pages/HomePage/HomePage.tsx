@@ -1,9 +1,11 @@
 import React from "react";
-import { Layout, Button, DatePicker } from "antd";
-import AdressInput from "../../components/Input/Input";
-import AppHeader from "../../components/Header/Header";
+import { Layout, Button, DatePicker, ConfigProvider } from "antd";
+import AdressInput from "../../components/Input/AdressInput";
+import dayjs from "dayjs";
+import "dayjs/locale/ru";
+import locale from "antd/locale/ru_RU";
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const LandingPage = () => {
   function disabledDate(currentDate) {
@@ -13,7 +15,6 @@ const LandingPage = () => {
   }
   return (
     <Layout>
-      <AppHeader></AppHeader>
       <Content
         style={{
           padding: "50px",
@@ -25,10 +26,13 @@ const LandingPage = () => {
       >
         <AdressInput placeholder="Откуда ехать" />
         <AdressInput placeholder="Куда ехать" />
-        <DatePicker
-          placeholder="Время"
-          disabledDate={disabledDate}
-        ></DatePicker>
+        <ConfigProvider locale={locale}>
+          <DatePicker
+            placeholder="Выберите дату"
+            disabledDate={disabledDate}
+            format={"DD.MM.YYYY"}
+          />
+        </ConfigProvider>
         <Button type="primary" style={{ width: "100%" }}>
           Найти поездку
         </Button>

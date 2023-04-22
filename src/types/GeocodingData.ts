@@ -1,9 +1,9 @@
-export type GeocodingDataApi = {
+export interface GeocodingDataApi {
   center: number[];
   place_name: string;
-};
+}
 
-export type GeocodingDataClient = {
+export interface GeocodingDataClient {
   value: number[];
   label: string;
-};
+}

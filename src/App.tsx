@@ -1,21 +1,11 @@
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import { RouterProvider, useNavigate } from "react-router-dom";
 import "./App.css";
-import LandingPage from "./pages/HomePage/HomePage";
-import RegisterPage from "./pages/RegisterPage/RegisterPage";
+import router from "./pages/router";
+import { useEffect, type ReactElement } from "react";
+import ApiClient from "./api/ApiAuthClient";
+import useAuthStore from "./store/auth";
 
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <LandingPage />,
-  },
-  {
-    path: "/register",
-    element: <RegisterPage></RegisterPage>,
-  },
-]);
-
-function App() {
+function App(): ReactElement {
   return (
     <div className="App">
       <RouterProvider router={router} />

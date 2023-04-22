@@ -1,7 +1,10 @@
-import { GeocodingDataApi, GeocodingDataClient } from "../types/GeocodingData";
+import {
+  type GeocodingDataApi,
+  type GeocodingDataClient,
+} from "../types/GeocodingData";
 
 export function extractAddressAndCoordinates(
-  data: GeocodingDataApi[]
+  data: GeocodingDataApi[],
 ): GeocodingDataClient[] {
   const result: GeocodingDataClient[] = [];
   for (let i = 0; i < data.length; i++) {

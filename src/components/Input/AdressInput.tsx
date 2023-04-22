@@ -1,7 +1,7 @@
 import { AutoComplete } from "antd";
 import { useState } from "react";
 import { extractAddressAndCoordinates } from "../../helpers/extractAddressAndCoordinates";
-import { GeocodingDataClient } from "../../types/GeocodingData";
+import { type GeocodingDataClient } from "../../types/GeocodingData";
 
 const mapboxApiKey =
   "pk.eyJ1IjoieWFkYXJvNGthIiwiYSI6ImNsZjdjZXdscTFkaTMzdG9jbnNhNTBiZ3cifQ.gbKXjjN-ea347B-MUmTuFA";
@@ -11,7 +11,7 @@ const AdressInput = ({
   style,
 }: {
   placeholder: string;
-  style: any;
+  style?: any;
 }) => {
   const [options, setOptions] = useState<GeocodingDataClient[]>([]);
   const [value, setValue] = useState<string>("");
@@ -27,19 +27,18 @@ const AdressInput = ({
   };
 
   const handleSearch = () => {
-    console.log("ss");
     setIsLoading(true);
     setIsDirty(true);
 
     setTimeout(() => {
-      let coordinates = [];
+      const coordinates = [];
 
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-          value
-        )}.json?access_token=${mapboxApiKey}&country=RU&&types=region,place,locality,neighborhood,address`
+          value,
+        )}.json?access_token=${mapboxApiKey}&country=RU&&types=region,place,locality,neighborhood,address`,
       )
-        .then((response) => response.json())
+        .then(async (response) => await response.json())
         .then((data) => {
           setIsLoading(false);
           if (data.features && data.features.length > 0) {
@@ -60,15 +59,12 @@ const AdressInput = ({
         onSearch={handleSearch}
         onChange={handleChange}
         onSelect={handleSelect}
-        style={{ width: 300 }}
+        style={style}
         placeholder={placeholder}
         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
         notFoundContent={
           isLoading && isDirty ? "Загрузка..." : "Нет результатов"
         }
-        style={{
-          width: "100%",
-        }}
       />
     </>
   );

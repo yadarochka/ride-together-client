@@ -1,24 +1,28 @@
-import React, { useState } from 'react';
-import { Form, Input, Select, Button, Card, message } from 'antd';
-import ApiClient from '../../api/ApiClient';
+import React, { useState } from "react";
+import { Form, Input, Select, Button, Card, message } from "antd";
+import ApiClient from "../../api/ApiAuthClient";
+import useAuthStore from "../../store/auth";
+import { useNavigate } from "react-router-dom";
+import TokenService from "../../helpers/token";
 
 const { Option } = Select;
 
-type FormValues = {
-  confirm: string,
-  gender: number,
-  name: string,
-  surname: string,
-  prefix: string,
-  email: string,
-  password: string,
-  phone: string,
+interface FormValues {
+  confirm: string;
+  gender: number;
+  name: string;
+  surname: string;
+  prefix: string;
+  email: string;
+  password: string;
+  phone: string;
 }
 
 const RegistrationForm = () => {
-  const [emailIsValid, setEmailIsValid] = useState(true)
-  const [phoneIsValid, setPhoneIsValid] = useState(true)
-
+  const [emailIsValid, setEmailIsValid] = useState(true);
+  const [phoneIsValid, setPhoneIsValid] = useState(true);
+  const login = useAuthStore((state) => state.login);
+  const navigate = useNavigate();
 
   const onFinish = async (values: FormValues) => {
     const response = await ApiClient.register({
@@ -27,38 +31,43 @@ const RegistrationForm = () => {
       surname: values.surname,
       password: values.password,
       gender_id: values.gender,
-      phone: values.prefix + values.phone
-    })
+      phone: values.prefix + values.phone,
+    });
 
-    if (response.message === "Пользователь с такой почтой уже зарегистрирован"){
-      setEmailIsValid(false)
+    if (
+      response.message === "Пользователь с такой почтой уже зарегистрирован"
+    ) {
+      setEmailIsValid(false);
       message.error(response.message);
-      return 
+      return;
     }
 
-    if (response.message === "Пользователь с таким номером уже зарегистрирован"){
-      setPhoneIsValid(false)
+    if (
+      response.message === "Пользователь с таким номером уже зарегистрирован"
+    ) {
+      setPhoneIsValid(false);
       message.error(response.message);
-      return
+      return;
     }
 
-    if (response.message === "Непредвиденная ошибка"){
+    if (response.message === "Непредвиденная ошибка") {
       message.error(response.message);
-      return
+      return;
     }
 
-    message.success('Вы успешно зарегистрированы')
-
-    console.log(response)
+    TokenService.setToken(response.accessToken);
+    message.success("Вы успешно зарегистрированы");
+    login(response.userDto);
+    navigate("/");
   };
-  
+
   const handleEmailChange = () => {
     setEmailIsValid(true);
-  }
+  };
 
   const handlePhoneChange = () => {
     setPhoneIsValid(true);
-  }
+  };
 
   return (
     <Card title="Регистрация">
@@ -66,7 +75,7 @@ const RegistrationForm = () => {
         name="registration_form"
         onFinish={onFinish}
         initialValues={{
-          prefix: '+7',
+          prefix: "+7",
         }}
         scrollToFirstError
       >
@@ -76,7 +85,7 @@ const RegistrationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Укажите своё имя',
+              message: "Укажите своё имя",
             },
           ]}
         >
@@ -89,7 +98,7 @@ const RegistrationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Укажите свою фамилию',
+              message: "Укажите свою фамилию",
             },
           ]}
         >
@@ -97,22 +106,24 @@ const RegistrationForm = () => {
         </Form.Item>
 
         <Form.Item
-          validateStatus={ emailIsValid ? 'success' : 'error'}
-          help= {emailIsValid ? null : 'Пользователь с такой почтой уже зарегистрирован'}
+          validateStatus={emailIsValid ? "success" : "error"}
+          help={
+            emailIsValid
+              ? null
+              : "Пользователь с такой почтой уже зарегистрирован"
+          }
           name="email"
           label="E-mail"
           rules={[
             {
-              type: 'email',
-              message: 'Неправильный E-mail',
+              type: "email",
+              message: "Неправильный E-mail",
             },
             {
               required: true,
-              message: 'Укажите свой E-mail',
+              message: "Укажите свой E-mail",
             },
-            
           ]}
-          
         >
           <Input onChange={handleEmailChange} />
         </Form.Item>
@@ -120,33 +131,40 @@ const RegistrationForm = () => {
         <Form.Item
           name="phone"
           label="Номер телефона"
-          validateStatus={ phoneIsValid ? 'success' : 'error'}
-          help= {phoneIsValid ? null : 'Пользователь с таким номером уже зарегистрирован'}
+          validateStatus={phoneIsValid ? "success" : "error"}
+          help={
+            phoneIsValid
+              ? null
+              : "Пользователь с таким номером уже зарегистрирован"
+          }
           rules={[
             {
               required: true,
-              message: 'Укажите свой номер телефона',
+              message: "Укажите свой номер телефона",
             },
             {
-              len:10,
-              message: 'Номер телефона должен содержать ровно 10 цифр'
+              len: 10,
+              message: "Номер телефона должен содержать ровно 10 цифр",
             },
             {
-              validator: (rule, value) => {
+              validator: async (rule, value) => {
                 if (!/^[0-9]*$/.test(value)) {
-                  return Promise.reject('Номер телефона должен содержать только цифры');
+                  return await Promise.reject(
+                    "Номер телефона должен содержать только цифры",
+                  );
                 }
-                return Promise.resolve();
-              }
-            }
+                await Promise.resolve();
+              },
+            },
           ]}
         >
-          <Input onChange={handlePhoneChange}
+          <Input
+            onChange={handlePhoneChange}
             addonBefore={
               <Form.Item
                 name="prefix"
                 noStyle
-                rules={[{ required: true, message: 'Выберете код страны' }]}
+                rules={[{ required: true, message: "Выберете код страны" }]}
               >
                 <Select
                   style={{
@@ -158,63 +176,64 @@ const RegistrationForm = () => {
               </Form.Item>
             }
             style={{
-              width: '100%',
+              width: "100%",
             }}
           />
         </Form.Item>
 
         <Form.Item
-        name="password"
-        label="Пароль"
-        rules={[
-          {
-            required: true,
-            message: 'Пожалуйста, введите свой пароль',
-          },
-          {
-            min: 12,
-            message: 'Слишком короткий пароль'
-          },
-          {
-            max: 20,
-            message: 'Слишком длинный пароль'
-          },
-        ]}
-        hasFeedback
-      >
-        <Input.Password />
-      </Form.Item>
-
-      <Form.Item
-        name="confirm"
-        label="Подтвердите пароль"
-        dependencies={['password']}
-        hasFeedback
-        rules={[
-          {
-            required: true,
-            message: 'Пожалуйста, подтвердите свой пароль',
-          },
-          {
-            min: 12,
-            message: 'Слишком короткий пароль'
-          },
-          {
-            max: 20,
-            message: 'Слишком длинный пароль'
-          },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue('password') === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error('Пароли не совпадают'));
+          name="password"
+          label="Пароль"
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, введите свой пароль",
             },
-          }),
-        ]}
-      >
-        <Input.Password />
-      </Form.Item>
+            {
+              min: 12,
+              message: "Слишком короткий пароль",
+            },
+            {
+              max: 20,
+              message: "Слишком длинный пароль",
+            },
+          ]}
+          hasFeedback
+        >
+          <Input.Password />
+        </Form.Item>
+
+        <Form.Item
+          name="confirm"
+          label="Подтвердите пароль"
+          dependencies={["password"]}
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Пожалуйста, подтвердите свой пароль",
+            },
+            {
+              min: 12,
+              message: "Слишком короткий пароль",
+            },
+            {
+              max: 20,
+              message: "Слишком длинный пароль",
+            },
+            ({ getFieldValue }) => ({
+              async validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  await Promise.resolve();
+                  return;
+                }
+                return await Promise.reject(new Error("Пароли не совпадают"));
+              },
+            }),
+          ]}
+        >
+          <Input.Password />
+        </Form.Item>
 
         <Form.Item
           name="gender"
@@ -222,7 +241,7 @@ const RegistrationForm = () => {
           rules={[
             {
               required: true,
-              message: 'Укажите свой пол',
+              message: "Укажите свой пол",
             },
           ]}
         >

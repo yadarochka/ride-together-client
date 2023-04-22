@@ -2,8 +2,12 @@ import React, { useEffect } from "react";
 import { useQuery } from "react-query";
 
 const RidesPage = () => {
-  const { isLoading, error, data, isSuccess } = useQuery("rides", () =>
-    fetch("http://localhost:3000/api/ride").then((res) => res.json())
+  const { isLoading, error, data, isSuccess } = useQuery(
+    "rides",
+    async () =>
+      await fetch("http://localhost:3000/api/ride").then(
+        async (res) => await res.json(),
+      ),
   );
   console.log(data);
 
