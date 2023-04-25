@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Descriptions } from "antd";
 import dayjs from "dayjs";
+import RideMap from "../../components/Map/Map";
 
 const RidePage = () => {
   const trip = {
@@ -32,6 +33,7 @@ const RidePage = () => {
           {trip.details}
         </Descriptions.Item>
       </Descriptions>
+      <RideMap pointA={[37.6156, 55.7522]} pointB={[30.185, 59.5619]}></RideMap>
     </Card>
   );
 };
