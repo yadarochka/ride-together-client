@@ -1,5 +1,5 @@
 import axios from "axios";
-import { RideClient, type User } from "./type";
+import { type RideClient, type User } from "./type";
 import TokenService from "../helpers/token";
 
 const $api = axios.create({
@@ -12,13 +12,13 @@ $api.interceptors.request.use((config) => {
   return config;
 });
 
-type RideFilter = {
+interface RideFilter {
   maxPrice: number;
   minPrice: number;
   maxSeats: number;
   minSeats: number;
   // date: Date;
-};
+}
 
 class ApiRideClient {
   static async createRide(ride: RideClient) {
@@ -41,9 +41,41 @@ class ApiRideClient {
     return await response.data;
   }
 
+  static async leaveFromRide(
+    ride_id: number | string,
+    user_id: number | string,
+  ) {
+    const response = await $api.post("/ride/passengers/leave", {
+      ride_id,
+      user_id,
+    });
+    return await response.data;
+  }
+
   static async getRidesFromUser(user_id: number | string) {
-    console.log(user_id);
     const response = await $api.get("/ride/rides_from_user/" + user_id);
+    return await response.data;
+  }
+
+  static async getRideById(ride_id: number) {
+    const response = await $api.get("/ride/" + ride_id);
+    return await response.data;
+  }
+
+  static async getPassengers(ride_id: number) {
+    const response = await $api.get("/ride/passengers/" + ride_id);
+    return await response.data;
+  }
+
+  static async inRide(ride_id: number | string, user_id: number | string) {
+    const response = await $api.post("/ride/user-in-ride/" + ride_id, {
+      user_id,
+    });
+    return await response.data;
+  }
+
+  static async cancelRide(ride_id: number | string) {
+    const response = await $api.put("/ride/" + ride_id);
     return await response.data;
   }
 }

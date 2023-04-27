@@ -10,13 +10,17 @@ import {
   Spin,
   message,
 } from "antd";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs, { type Dayjs } from "dayjs";
 import "dayjs/locale/ru";
 import locale from "antd/locale/ru_RU";
 import useAppStore from "../../store/app";
-import { RideClient } from "../../api/type";
+import { type RideClient } from "../../api/type";
 import ApiRideClient from "../../api/ApiRideClient";
 import TokenService from "../../helpers/token";
+import { useNavigate } from "react-router-dom";
+import AdressInput from "../../components/Input/AdressInput";
+import useLocationStore from "../../store/location";
+import { red, green } from "@ant-design/colors";
 
 const layout = {
   labelCol: { span: 4 },
@@ -29,6 +33,18 @@ const tailLayout = {
 const CreateRidePage = () => {
   const isLoading = useAppStore((state) => state.isLoading);
   const [date, setDate] = useState<Dayjs>();
+  const navigate = useNavigate();
+
+  const {
+    arrivalLocationCoor,
+    departureLocationCoor,
+    arrivalLocationName,
+    departureLocationName,
+    setArrivalLocationCoor,
+    setDepartureLocationCoor,
+    setDepartureLocationName,
+    setArrivalLocationName,
+  } = useLocationStore((store) => store);
 
   function disabledDate(currentDate) {
     const today = new Date();
@@ -37,13 +53,20 @@ const CreateRidePage = () => {
   }
 
   const onFinish = (values: RideClient) => {
-    console.log(TokenService.getToken());
+    if (!departureLocationCoor || !arrivalLocationCoor) {
+      message.error("Вы не указали адреса!");
+      return;
+    }
+    values.departure_location_name = departureLocationName;
+    values.arrival_location_name = arrivalLocationName;
     values.departure_date = date.$d;
-    values.departure_location = [50, 50];
-    values.arrival_location = [60, 60];
-    console.log(values);
+    values.departure_location = departureLocationCoor;
+    values.arrival_location = arrivalLocationCoor;
     ApiRideClient.createRide(values)
-      .then((data) => message.success("Поездка успешно создана"))
+      .then((data) => {
+        message.success("Поездка успешно создана");
+        navigate("/");
+      })
       .catch((er) => message.error(er.message));
   };
 
@@ -60,27 +83,20 @@ const CreateRidePage = () => {
   return (
     <Card title="Создание поездки" style={{ maxWidth: 1000, margin: "0 auto" }}>
       <Form {...layout} onFinish={onFinish}>
-        <Form.Item
-          label="Откуда"
-          name="departure_location"
-          rules={[
-            {
-              required: true,
-              message: "Пожалуйста, укажите место отправления",
-            },
-          ]}
-        >
-          <Input />
+        <Form.Item label="Откуда" name="departure_location">
+          <AdressInput
+            placeholder={"Место отправления"}
+            onSelect={setDepartureLocationCoor}
+            setName={setDepartureLocationName}
+          />
         </Form.Item>
 
-        <Form.Item
-          label="Куда"
-          name="arrival_location"
-          rules={[
-            { required: true, message: "Пожалуйста, укажите место назначения" },
-          ]}
-        >
-          <Input />
+        <Form.Item label="Куда" name="arrival_location">
+          <AdressInput
+            placeholder={"Место назначения"}
+            onSelect={setArrivalLocationCoor}
+            setName={setArrivalLocationName}
+          />
         </Form.Item>
 
         <Form.Item label="Дата отправления" name="departure_date">
@@ -121,7 +137,7 @@ const CreateRidePage = () => {
           <InputNumber min={0} step={10} />
         </Form.Item>
 
-        <Form.Item label="Детали поездки" name="details">
+        <Form.Item label="Детали поездки" name="additional_details">
           <Input.TextArea />
         </Form.Item>
 

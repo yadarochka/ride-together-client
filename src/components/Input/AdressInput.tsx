@@ -2,6 +2,7 @@ import { AutoComplete } from "antd";
 import { useState } from "react";
 import { extractAddressAndCoordinates } from "../../helpers/extractAddressAndCoordinates";
 import { type GeocodingDataClient } from "../../types/GeocodingData";
+import useLocationStore from "../../store/location";
 
 const mapboxApiKey =
   "pk.eyJ1IjoieWFkYXJvNGthIiwiYSI6ImNsZjdjZXdscTFkaTMzdG9jbnNhNTBiZ3cifQ.gbKXjjN-ea347B-MUmTuFA";
@@ -9,14 +10,15 @@ const mapboxApiKey =
 const AdressInput = ({
   placeholder,
   style,
+  onSelect,
+  setName,
 }: {
   placeholder: string;
   style?: any;
+  setName: (label: string) => void;
 }) => {
   const [options, setOptions] = useState<GeocodingDataClient[]>([]);
   const [value, setValue] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
 
   const handleChange = (data: string) => {
     setValue(data);
@@ -24,15 +26,13 @@ const AdressInput = ({
 
   const handleSelect = (value: number[], options: GeocodingDataClient) => {
     setValue(options.label);
+    onSelect(options.value);
+    setName(options.label);
   };
 
   const handleSearch = () => {
-    setIsLoading(true);
-    setIsDirty(true);
-
+    setOptions([]);
     setTimeout(() => {
-      const coordinates = [];
-
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
           value,
@@ -40,9 +40,7 @@ const AdressInput = ({
       )
         .then(async (response) => await response.json())
         .then((data) => {
-          setIsLoading(false);
           if (data.features && data.features.length > 0) {
-            console.log(data.features);
             setOptions(extractAddressAndCoordinates(data.features));
           } else {
             console.log(`No coordinates found for "${value}"`);
@@ -62,9 +60,7 @@ const AdressInput = ({
         style={style}
         placeholder={placeholder}
         dropdownStyle={{ maxHeight: 400, overflow: "auto" }}
-        notFoundContent={
-          isLoading && isDirty ? "Загрузка..." : "Нет результатов"
-        }
+        notFoundContent={"Нет результатов"}
       />
     </>
   );

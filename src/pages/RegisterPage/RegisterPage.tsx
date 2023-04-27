@@ -24,6 +24,14 @@ const RegistrationForm = () => {
   const login = useAuthStore((state) => state.login);
   const navigate = useNavigate();
 
+  const layout = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 16 },
+  };
+  const tailLayout = {
+    wrapperCol: { offset: 4, span: 16 },
+  };
+
   const onFinish = async (values: FormValues) => {
     const response = await ApiClient.register({
       email: values.email,
@@ -70,8 +78,9 @@ const RegistrationForm = () => {
   };
 
   return (
-    <Card title="Регистрация">
+    <Card title="Регистрация" style={{ maxWidth: 1000, margin: "0 auto" }}>
       <Form
+        {...layout}
         name="registration_form"
         onFinish={onFinish}
         initialValues={{
@@ -122,6 +131,10 @@ const RegistrationForm = () => {
             {
               required: true,
               message: "Укажите свой E-mail",
+            },
+            {
+              max: 30,
+              message: "Слишком длинный E-mail",
             },
           ]}
         >
@@ -252,7 +265,7 @@ const RegistrationForm = () => {
           </Select>
         </Form.Item>
 
-        <Form.Item>
+        <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit">
             Отправить
           </Button>
