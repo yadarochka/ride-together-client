@@ -48,8 +48,8 @@ const HistoryOfRides = () => {
             <CardOfRide
               ride_id={ride.id}
               key={ride.id}
-              from={"Уфа"}
-              to={"Москва"}
+              from={ride.departure_location_name}
+              to={ride.arrival_location_name}
               price={ride.price}
               available_seats={ride.available_seats}
               total_seats={ride.total_seats}
