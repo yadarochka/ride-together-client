@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../store/auth";
 import ApiClient from "../../api/ApiAuthClient";
 import { useEffect, useState } from "react";
-import { Spin, message } from "antd";
 import TokenService from "../../helpers/token";
 import useAppStore from "../../store/app";
 
@@ -22,7 +21,6 @@ const AppHeader = () => {
 
     response
       .then((data) => {
-        message.success("Все оки. Поставлен новый токен");
         login(data.userDto);
         TokenService.setToken(data.accessToken);
       })
