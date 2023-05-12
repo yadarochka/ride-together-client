@@ -52,7 +52,7 @@ const AppHeader = () => {
           navigate("/");
         }}
       >
-        <img src={logo} alt="logo" style={{ height: "32px" }} />
+        <img src={logo} alt="logo" style={{ height: "32px", width: "188px" }} />
       </div>
       <Menu
         theme="dark"

@@ -1,90 +1,9 @@
-// import * as React from "react";
-// import Map, {
-//   GeolocateControl,
-//   Marker,
-//   NavigationControl,
-//   Source,
-// } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-// import axios from "axios";
-
-// const token =
-//   "pk.eyJ1IjoieWFkYXJvNGthIiwiYSI6ImNsZjdjZXdscTFkaTMzdG9jbnNhNTBiZ3cifQ.gbKXjjN-ea347B-MUmTuFA";
 
 type RideMapProps = {
   pointA: number[];
   pointB: number[];
 };
-
-// const RideMap: React.FC<RideMapProps> = ({ pointA, pointB }) => {
-//   const [path, setPath] = React.useState();
-//   React.useEffect(() => {
-//     const response = axios.get(
-//       "https://api.mapbox.com/directions/v5/mapbox/driving/" +
-//         pointA[0] +
-//         "," +
-//         pointA[1] +
-//         ";" +
-//         pointB[0] +
-//         "," +
-//         pointB[1] +
-//         "?steps=true&geometries=geojson&access_token=" +
-//         token,
-//     );
-
-//     response
-//       .then((data) => data.data)
-//       .then((data) => {
-//         var route = data.routes[0].geometry.coordinates;
-//         console.log(route);
-//         setPath({
-//           type: "Feature",
-//           properties: {},
-//           geometry: {
-//             type: "LineString",
-//             coordinates: route,
-//           },
-//         });
-//       })
-//       .catch(console.error)
-//       .finally(() => console.log("завершено"));
-//   }, []);
-//   return (
-//     <Map
-//       initialViewState={{
-//         longitude: pointA[0],
-//         latitude: pointA[1],
-//         zoom: 10,
-//       }}
-//       attributionControl={false}
-//       style={{ width: "100%", height: "70vh" }}
-//       mapStyle="mapbox://styles/mapbox/streets-v9"
-//       mapboxAccessToken={token}
-//     >
-//       <Source id="route" type="geojson" data={path}></Source>
-//       <Marker longitude={pointA[0]} latitude={pointA[1]} anchor="bottom">
-//         <img
-//           src="https://cdn4.iconfinder.com/data/icons/map-pins-2/256/1-512.png"
-//           alt="marker"
-//           width={"80px"}
-//           height={"80px"}
-//         />
-//       </Marker>
-//       <Marker longitude={pointB[0]} latitude={pointB[1]} anchor="bottom">
-//         <img
-//           src="https://cdn4.iconfinder.com/data/icons/map-pins-2/256/1-512.png"
-//           alt="marker"
-//           width={"80px"}
-//           height={"80px"}
-//         />
-//       </Marker>
-//       <NavigationControl />
-//       <GeolocateControl />
-//     </Map>
-//   );
-// };
-
-// export default RideMap;
 
 import React, { useState, useRef, useEffect } from "react";
 import mapboxgl from "mapbox-gl";

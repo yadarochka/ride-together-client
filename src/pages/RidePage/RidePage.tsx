@@ -23,6 +23,8 @@ import CenteredSpin from "../../components/CenteredSpin/CenteredSpin";
 import { red, green } from "@ant-design/colors";
 import useAuthStore from "../../store/auth";
 
+const RideMap = React.lazy(() => import("../../components/Map/Map"));
+
 const RidePage = () => {
   const [isHost, setIsHost] = useState(false);
   const [inRide, setInRide] = useState();
@@ -256,10 +258,12 @@ const RidePage = () => {
           />
         </Card>
         <Card title={"Маршрут"}>
-          <RideMap
-            pointA={ride.departure_location}
-            pointB={ride.arrival_location}
-          ></RideMap>
+          <React.Suspense fallback={<CenteredSpin />}>
+            <RideMap
+              pointA={ride.departure_location}
+              pointB={ride.arrival_location}
+            />
+          </React.Suspense>
         </Card>
         {!inRide && (
           <Button

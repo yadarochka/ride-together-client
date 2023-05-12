@@ -152,7 +152,6 @@ const ListOfRides = () => {
             onSelect={setArrivalLocationCoor}
             setName={setArrivalLocationName}
           />
-          {/* <Input placeholder="Куда" /> */}
         </Form.Item>
 
         <Form.Item
@@ -168,6 +167,10 @@ const ListOfRides = () => {
             step={10}
             defaultValue={[0, 500]}
             tooltip={{ open: true }}
+            role="slider"
+            aria-valuemin={0}
+            aria-valuemax={500}
+            aria-valuenow={[0, 500]}
           />
         </Form.Item>
 
@@ -180,9 +183,14 @@ const ListOfRides = () => {
           <Slider
             range
             step={10}
+            min={0}
             max={2500}
             defaultValue={[0, 1000]}
             tooltip={{ open: true }}
+            role="slider"
+            aria-valuemin={0}
+            aria-valuemax={2500}
+            aria-valuenow={[0, 1000]}
           />
         </Form.Item>
 
@@ -199,6 +207,10 @@ const ListOfRides = () => {
             step={1}
             defaultValue={[1, 4]}
             tooltip={{ open: true }}
+            role="slider"
+            aria-valuemin={1}
+            aria-valuemax={4}
+            aria-valuenow={[1, 4]}
           />
         </Form.Item>
 
