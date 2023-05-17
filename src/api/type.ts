@@ -1,9 +1,9 @@
-interface UserData {
+export interface UserData {
   id?: number;
   name: string;
   surname: string;
   phone: string;
-  email: string;
+  email?: string;
 }
 
 export type User = UserData & {
