@@ -25,10 +25,7 @@ const ProfilePage = () => {
       const response = ApiUserClient.getUserProfile(userId);
       startLoading();
 
-      response
-        .then((data) => setUser(data))
-        .catch(console.error)
-        .finally(() => endLoading());
+      response.then((data) => setUser(data)).finally(() => endLoading());
     }
   }, []);
 

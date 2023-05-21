@@ -5,11 +5,14 @@ import {
   Avatar,
   Button,
   Card,
+  Col,
   Descriptions,
   Divider,
   List,
   Popconfirm,
   Progress,
+  Rate,
+  Row,
   Tooltip,
   Typography,
   message,
@@ -21,6 +24,8 @@ import useAppStore from "../../store/app";
 import CenteredSpin from "../../components/CenteredSpin/CenteredSpin";
 import { red, green } from "@ant-design/colors";
 import useAuthStore from "../../store/auth";
+import UserRate from "./UserRate";
+import RateUsersButton from "../../components/RateUsers/RateUsersButton";
 
 const RideMap = React.lazy(() => import("../../components/Map/Map"));
 
@@ -33,7 +38,6 @@ const RidePage = () => {
   const { isLoading, endLoading, startLoading } = useAppStore((store) => store);
 
   const { ride_id } = useParams();
-  console.log("user", user);
   useEffect(() => {
     ApiRideClient.inRide(ride_id, user.id).then();
   }, [inRide]);
@@ -131,130 +135,165 @@ const RidePage = () => {
   if (ride && passengers) {
     return (
       <>
-        <Card title="Поездка" style={{ marginBottom: "15px" }}>
-          <Descriptions>
-            <Descriptions.Item label="ID поездки">{ride.id}</Descriptions.Item>
-            <Descriptions.Item label="Откуда">
-              {ride.departure_location_name}
-            </Descriptions.Item>
-            <Descriptions.Item label="Куда">
-              {ride.arrival_location_name}
-            </Descriptions.Item>
-            <Descriptions.Item label="Дата отправления">
-              {dayjs(ride.departure_date).format("DD.MM.YYYY HH:mm")}
-            </Descriptions.Item>
-            <Descriptions.Item label="Цена">{ride.price} ₽</Descriptions.Item>
-            <Descriptions.Item label="Детали поездки">
-              {ride.additional_details ? ride.additional_details : "Нет"}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Статус поездки"}>
-              {ride.status}
-            </Descriptions.Item>
-            <Descriptions.Item label={"Доступные места"}>
-              <Tooltip
-                title={`Доступно ${ride.available_seats} мест из ${ride.total_seats}`}
-              >
-                <Progress
-                  showInfo={false}
-                  percent={(ride.available_seats / ride.total_seats) * 100}
-                  steps={ride.total_seats}
-                  strokeColor={Array.from(
-                    { length: ride.total_seats },
-                    (_, i) => {
-                      if (i < ride.available_seats) {
-                        return green[6];
-                      }
-                      return red[6];
-                    },
-                  )}
-                />
-              </Tooltip>
-            </Descriptions.Item>
-          </Descriptions>
-          {isHost && (
-            <Popconfirm
-              cancelButtonProps={{ title: "Отмена" }}
-              cancelText="Отмена"
-              title="Отмена поездки"
-              description="Вы уверены, что хотите отменить поездку? Отменить данное действие нельзя"
-              icon={<QuestionCircleOutlined style={{ color: "red" }} />}
-              onConfirm={cancelRide}
+        <Row gutter={16}>
+          <Col xs={24} lg={12} style={{ height: "100%" }}>
+            <Card
+              title="Поездка"
+              style={{ marginBottom: "15px", height: "calc(100% - 15px)" }}
             >
-              <Button type="primary" danger>
-                Отменить поездку
-              </Button>
-            </Popconfirm>
-          )}
-          {inRide && (
-            <Button danger type="primary" onClick={leaveTheRide}>
-              Покинуть поездку
-            </Button>
-          )}
-          {!inRide && !isHost && (
-            <Button
-              disabled={ride.available_seats === 0}
-              type="primary"
-              onClick={joinToRide}
-            >
-              Присоединиться к поездке!
-            </Button>
-          )}
-        </Card>
-        <Card
-          title={"Информация о попутчиках"}
-          style={{ marginBottom: "15px" }}
-        >
-          <List header={<Typography.Text strong>Водитель</Typography.Text>}>
-            <List.Item>
-              <List.Item.Meta
-                avatar={
-                  <Avatar
-                    src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${0}`}
-                  />
-                }
-                title={
-                  <Link to={"/profile/" + ride.driver_id}>
-                    {ride.driver_name + " " + ride.driver_surname}
-                  </Link>
-                }
-                description={"ID: " + ride.driver_id}
-              />
-            </List.Item>
-          </List>
-          <List
-            header={<Typography.Text strong>Пассажиры</Typography.Text>}
-            itemLayout="horizontal"
-            dataSource={passengers}
-            renderItem={(item, index) => (
-              <List.Item>
-                <List.Item.Meta
-                  avatar={
-                    <Avatar
-                      src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${
-                        index + 1
-                      }`}
+              <Descriptions column={2}>
+                <Descriptions.Item label="ID поездки">
+                  {ride.id}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Дата отправления">
+                  {dayjs(ride.departure_date).format("DD.MM.YYYY HH:mm")}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Откуда">
+                  {ride.departure_location_name}
+                </Descriptions.Item>
+                <Descriptions.Item label="Куда">
+                  {ride.arrival_location_name}
+                </Descriptions.Item>
+
+                <Descriptions.Item label="Цена">
+                  {ride.price} ₽
+                </Descriptions.Item>
+                <Descriptions.Item label="Детали поездки">
+                  {ride.additional_details ? ride.additional_details : "Нет"}
+                </Descriptions.Item>
+                <Descriptions.Item label={"Статус поездки"}>
+                  {ride.status}
+                </Descriptions.Item>
+                <Descriptions.Item label={"Доступные места"}>
+                  <Tooltip
+                    title={`Доступно ${ride.available_seats} мест из ${ride.total_seats}`}
+                  >
+                    <Progress
+                      showInfo={false}
+                      percent={(ride.available_seats / ride.total_seats) * 100}
+                      steps={ride.total_seats}
+                      strokeColor={Array.from(
+                        { length: ride.total_seats },
+                        (_, i) => {
+                          if (i < ride.available_seats) {
+                            return green[6];
+                          }
+                          return red[6];
+                        },
+                      )}
                     />
-                  }
-                  title={
-                    <Link to={"/profile/" + item.id}>
-                      {item.name + " " + item.surname}{" "}
-                      {item.id === user.id && "(Это вы)"}
-                    </Link>
-                  }
-                  description={"ID: " + item.id}
+                  </Tooltip>
+                </Descriptions.Item>
+              </Descriptions>
+              {isHost && (
+                <Popconfirm
+                  cancelButtonProps={{ title: "Отмена" }}
+                  cancelText="Отмена"
+                  title="Отмена поездки"
+                  description="Вы уверены, что хотите отменить поездку? Отменить данное действие нельзя"
+                  icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+                  onConfirm={cancelRide}
+                >
+                  <Button type="primary" danger>
+                    Отменить поездку
+                  </Button>
+                </Popconfirm>
+              )}
+              {inRide && ride.status_id === 1 && (
+                <Button danger type="primary" onClick={leaveTheRide}>
+                  Покинуть поездку
+                </Button>
+              )}
+              {!inRide && !isHost && (
+                <Button
+                  disabled={ride.available_seats === 0}
+                  type="primary"
+                  onClick={joinToRide}
+                >
+                  Присоединиться к поездке!
+                </Button>
+              )}
+            </Card>
+          </Col>
+          <Col xs={24} lg={12} style={{ height: "100%" }}>
+            <Card
+              title={"Информация о попутчиках"}
+              style={{ marginBottom: "15px" }}
+            >
+              <List header={<Typography.Text strong>Водитель</Typography.Text>}>
+                <List.Item>
+                  <List.Item.Meta
+                    avatar={
+                      <Avatar
+                        src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${0}`}
+                      />
+                    }
+                    title={
+                      <Link to={"/profile/" + ride.driver_id}>
+                        {ride.driver_name + " " + ride.driver_surname}
+                      </Link>
+                    }
+                    description={"ID: " + ride.driver_id}
+                  />
+                  <UserRate userId={ride.driver_id} />
+                </List.Item>
+              </List>
+              <List
+                header={<Typography.Text strong>Пассажиры</Typography.Text>}
+                itemLayout="horizontal"
+                dataSource={passengers}
+                renderItem={(item, index) => (
+                  <List.Item>
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${
+                            index + 1
+                          }`}
+                        />
+                      }
+                      title={
+                        <Link to={"/profile/" + item.id}>
+                          {item.name + " " + item.surname}{" "}
+                          {item.id === user.id && "(Это вы)"}
+                        </Link>
+                      }
+                      description={"ID: " + item.id}
+                    />
+                    <UserRate userId={item.id}></UserRate>
+                  </List.Item>
+                )}
+              />
+              {ride.status_id === 2 && (
+                <RateUsersButton
+                  passengers={[
+                    {
+                      id: ride.driver_id,
+                      name: ride.driver_name,
+                      surname: ride.driver_surname,
+                    },
+                    ...passengers,
+                  ]}
+                  userId={user?.id}
+                  rideId={ride.id}
                 />
-              </List.Item>
-            )}
-          />
-        </Card>
-        <Card title={"Маршрут"}>
-          <React.Suspense fallback={<CenteredSpin />}>
-            <RideMap
-              pointA={ride.departure_location}
-              pointB={ride.arrival_location}
-            />
-          </React.Suspense>
-        </Card>
+              )}
+            </Card>
+          </Col>
+          <Col lg={24} xs={24}>
+            <Card title={"Маршрут"}>
+              <React.Suspense fallback={<CenteredSpin />}>
+                <RideMap
+                  pointA={ride.departure_location}
+                  pointB={ride.arrival_location}
+                />
+              </React.Suspense>
+            </Card>
+          </Col>
+        </Row>
+
         {!inRide && !isHost && (
           <Button
             onClick={joinToRide}

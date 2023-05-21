@@ -76,14 +76,12 @@ const ListOfRides = () => {
         setRides(data);
         message.success("Запрос успешно выполнен");
       })
-      .catch(console.error)
       .finally(() => {
         setTableIsLoading(false);
       });
   };
 
   const onFinish = (values: { price: number[]; seats: number[] }) => {
-    console.log(date);
     setTableIsLoading(true);
     setIsShowButtonAllRides(true);
     const response = ApiRideClient.getRidesWithFilters({
@@ -103,7 +101,6 @@ const ListOfRides = () => {
         setRides(data);
         message.success("Запрос успешно выполнен");
       })
-      .catch(console.error)
       .finally(() => {
         setTableIsLoading(false);
       });

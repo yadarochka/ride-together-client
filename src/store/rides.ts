@@ -12,9 +12,7 @@ const useRideStore = create<RideState>((set) => ({
   setRides: (rides) => {
     try {
       set({ rides });
-    } catch (error) {
-      console.error(error);
-    }
+    } catch (error) {}
   },
 }));
 

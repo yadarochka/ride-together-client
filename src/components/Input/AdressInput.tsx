@@ -42,8 +42,6 @@ const AdressInput = ({
         .then((data) => {
           if (data.features && data.features.length > 0) {
             setOptions(extractAddressAndCoordinates(data.features));
-          } else {
-            console.log(`No coordinates found for "${value}"`);
           }
         });
     }, 1000);
