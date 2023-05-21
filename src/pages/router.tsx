@@ -12,6 +12,9 @@ const CreateRidePage = React.lazy(
 const ListOfRides = React.lazy(() => import("./ListOfRides/ListOfRides"));
 const MyProfilePage = React.lazy(() => import("./ProfilePage/MyProfilePage"));
 const RidePage = React.lazy(() => import("./RidePage/RidePage"));
+const EditProfilePage = React.lazy(
+  () => import("./EditProfilePage/EditProfilePage"),
+);
 
 const router = createBrowserRouter([
   {
@@ -43,6 +46,14 @@ const router = createBrowserRouter([
         element: (
           <React.Suspense fallback={<CenteredSpin />}>
             <MyProfilePage />
+          </React.Suspense>
+        ),
+      },
+      {
+        path: "profile/edit",
+        element: (
+          <React.Suspense fallback={<CenteredSpin />}>
+            <EditProfilePage />
           </React.Suspense>
         ),
       },

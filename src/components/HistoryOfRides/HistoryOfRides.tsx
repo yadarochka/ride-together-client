@@ -20,7 +20,6 @@ const HistoryOfRides = () => {
     const response = ApiRideClient.getRidesFromUser(user_id);
     response
       .then((data) => {
-        console.log(data);
         setRides(data);
       })
       .catch((err) => {

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { confirmedEmailIcon, unconfirmedEmailIcon } from "./components/Icons";
 import TokenService from "../../helpers/token";
 import HistoryOfRides from "../../components/HistoryOfRides/HistoryOfRides";
+import ApiUserClient from "../../api/ApiUserClient";
 
 const MyProfilePage = () => {
   const navigate = useNavigate();
@@ -14,6 +15,10 @@ const MyProfilePage = () => {
     TokenService.deleteToken();
     logout();
     navigate("/");
+  };
+
+  const handleClickEditProfile = () => {
+    navigate("edit");
   };
 
   if (user) {
@@ -39,7 +44,9 @@ const MyProfilePage = () => {
           </Row>
           <Divider />
           <Row justify="space-between">
-            <Button type="primary">Редактировать профиль</Button>
+            <Button type="primary" onClick={handleClickEditProfile}>
+              Редактировать профиль
+            </Button>
             <Button danger type="primary" onClick={exitFromAccount}>
               Выйти
             </Button>
