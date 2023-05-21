@@ -70,11 +70,13 @@ const HistoryOfRides = () => {
         upcomingRides.length > 0 ? (
           upcomingRides.map((ride) => (
             <CardOfRide
+              ride_id={ride.id}
               key={ride.id}
-              from={"Уфа"}
-              to={"Москва"}
+              from={ride.departure_location_name}
+              to={ride.arrival_location_name}
               price={ride.price}
-              passengers={ride.available_seats}
+              available_seats={ride.available_seats}
+              total_seats={ride.total_seats}
               departureTime={dayjs(ride.departure_date).format(
                 "DD.MM.YYYY HH:mm",
               )}
@@ -92,11 +94,13 @@ const HistoryOfRides = () => {
         сompletedRides.length > 0 ? (
           сompletedRides.map((ride) => (
             <CardOfRide
+              ride_id={ride.id}
               key={ride.id}
-              from={"Уфа"}
-              to={"Москва"}
+              from={ride.departure_location_name}
+              to={ride.arrival_location_name}
               price={ride.price}
-              passengers={ride.available_seats}
+              available_seats={ride.available_seats}
+              total_seats={ride.total_seats}
               departureTime={dayjs(ride.departure_date).format(
                 "DD.MM.YYYY HH:mm",
               )}
@@ -114,11 +118,13 @@ const HistoryOfRides = () => {
         cancelledRides.length > 0 ? (
           cancelledRides.map((ride) => (
             <CardOfRide
+              ride_id={ride.id}
               key={ride.id}
-              from={"Уфа"}
-              to={"Москва"}
+              from={ride.departure_location_name}
+              to={ride.arrival_location_name}
               price={ride.price}
-              passengers={ride.available_seats}
+              available_seats={ride.available_seats}
+              total_seats={ride.total_seats}
               departureTime={dayjs(ride.departure_date).format(
                 "DD.MM.YYYY HH:mm",
               )}

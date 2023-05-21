@@ -49,7 +49,7 @@ const MyProfilePage = () => {
           title="История поездок"
           style={{ maxWidth: 600, margin: "0 auto" }}
         >
-          <HistoryOfRides></HistoryOfRides>
+          <HistoryOfRides />
         </Card>
       </>
     );

@@ -15,7 +15,6 @@ import {
   message,
 } from "antd";
 import dayjs from "dayjs";
-import RideMap from "../../components/Map/Map";
 import ApiRideClient from "../../api/ApiRideClient";
 import { Link, useParams } from "react-router-dom";
 import useAppStore from "../../store/app";
@@ -33,22 +32,13 @@ const RidePage = () => {
   const user = useAuthStore((store) => store.user);
   const { isLoading, endLoading, startLoading } = useAppStore((store) => store);
 
+  const { ride_id } = useParams();
+  console.log("user", user);
   useEffect(() => {
-    ApiRideClient.inRide(ride_id, user.id).then(console.log);
+    ApiRideClient.inRide(ride_id, user.id).then();
   }, [inRide]);
 
-  const trip = {
-    departure_location: "Москва",
-    arrival_location: "Санкт-Петербург",
-    departure_date: dayjs("2023-05-01T10:30:00").format("DD.MM.YYYY HH:mm"),
-    available_seats: 1,
-    price: 1000,
-    details: "Без дополнительных условий",
-  };
-
   const [isAffixed, setIsAffixed] = useState(false);
-
-  const { ride_id } = useParams();
 
   useEffect(() => {
     if (ride) {
@@ -265,7 +255,7 @@ const RidePage = () => {
             />
           </React.Suspense>
         </Card>
-        {!inRide && (
+        {!inRide && !isHost && (
           <Button
             onClick={joinToRide}
             type="primary"
