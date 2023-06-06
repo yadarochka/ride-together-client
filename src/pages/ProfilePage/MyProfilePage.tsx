@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { confirmedEmailIcon, unconfirmedEmailIcon } from "./components/Icons";
 import TokenService from "../../helpers/token";
 import HistoryOfRides from "../../components/HistoryOfRides/HistoryOfRides";
-import ApiUserClient from "../../api/ApiUserClient";
+import UserRate from "../RidePage/UserRate";
 
 const MyProfilePage = () => {
   const navigate = useNavigate();
@@ -30,7 +30,12 @@ const MyProfilePage = () => {
         >
           <Row justify="space-between" align="middle">
             <Col span={4}>
-              <Avatar size={64}>User</Avatar>
+              <Avatar
+                src={`https://xsgames.co/randomusers/avatar.php?g=pixel&key=${user.id}`}
+                size={64}
+              >
+                User
+              </Avatar>
             </Col>
             <Col span={20}>
               <h2>{`${user.name} ${user.surname}`}</h2>
@@ -40,6 +45,7 @@ const MyProfilePage = () => {
                 {user.isActivated ? confirmedEmailIcon : unconfirmedEmailIcon}
               </p>
               <p>{`Пол: ${user.gender}`}</p>
+              <UserRate userId={user.id} />
             </Col>
           </Row>
           <Divider />

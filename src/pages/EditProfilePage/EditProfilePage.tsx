@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Form, Input, Select, Button, Card, message } from "antd";
+import { Form, Input, Select, Button, Card, message, Row } from "antd";
 import ApiClient from "../../api/ApiAuthClient";
 import useAuthStore from "../../store/auth";
 import { useNavigate } from "react-router-dom";
@@ -72,6 +72,10 @@ const EditProfilePage = () => {
 
   const handlePhoneChange = () => {
     setPhoneIsValid(true);
+  };
+
+  const handleButtonCancelEdit = () => {
+    navigate("/profile");
   };
 
   return (
@@ -189,9 +193,14 @@ const EditProfilePage = () => {
         </Form.Item>
 
         <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Отправить
-          </Button>
+          <Row justify="space-between">
+            <Button type="primary" htmlType="submit">
+              Отправить
+            </Button>
+            <Button type="primary" danger onClick={handleButtonCancelEdit}>
+              Отмена
+            </Button>
+          </Row>
         </Form.Item>
       </Form>
     </Card>

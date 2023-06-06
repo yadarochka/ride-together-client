@@ -3,6 +3,7 @@ import Header from "../components/Header/Header";
 import { Outlet, createBrowserRouter } from "react-router-dom";
 import React from "react";
 import CenteredSpin from "../components/CenteredSpin/CenteredSpin";
+import LayoutContainer from "../components/LayoutContainer";
 
 const RegisterPage = React.lazy(() => import("./RegisterPage/RegisterPage"));
 const ProfilePage = React.lazy(() => import("./ProfilePage/ProfilePage"));
@@ -21,7 +22,7 @@ const router = createBrowserRouter([
     path: "/",
     element: (
       <>
-        <Header /> <Outlet />
+        <Header /> <LayoutContainer render={<Outlet />} />
       </>
     ),
     children: [

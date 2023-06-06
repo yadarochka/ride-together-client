@@ -29,7 +29,7 @@ const UserRate = (props) => {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: "flex", flexDirection: "column", width: "132px" }}>
       <Rate disabled value={value} />
       <small style={{ textAlign: "center" }}>Количество оценок: {count}</small>
     </div>
